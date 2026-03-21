@@ -81,7 +81,9 @@
     <script>
         const FETCH_URL = 'http://localhost:1608/';
         const LYRCIS_HOST = "https://lrclib.net/api"; 
-        const OFFSET = 1.3; // Global sync offset
+        // Get offset from URL (e.g., .../index.html?offset=2.5) or default to 1.3
+const urlParams = new URLSearchParams(window.location.search);
+const OFFSET = parseFloat(urlParams.get('offset')) || 1.3;
 
         let current_lyrics = [];
         let current_line_index = -1;
