@@ -7,7 +7,8 @@ A high-performance, visually stunning OBS browser overlay for synchronized lyric
 
 ## 🚀 Why use this?
 1. **Reliability:** The original Tuna overlay uses a self-hosted lyrics database that is missing songs. This version talks directly to the official **LRCLib API**.
-2. **Triple-Fallback Search:** * **Duration Match:** Uses the exact song length for high-precision sync.
+2. **Triple-Fallback Search:**
+    * **Duration Match:** Uses the exact song length for high-precision sync.
     * **Metadata Match:** Direct Title + Artist lookup.
     * **Broad Search:** A "Hail Mary" search to find lyrics even if the song metadata is messy.
 3. **Premium Visuals:** Features an "Apple Music" style aesthetic with glowing effects and smooth, hardware-accelerated motion.
