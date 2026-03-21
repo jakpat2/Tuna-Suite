@@ -1,19 +1,48 @@
-# Tuna-Lyrics-OBS-Overlay
-An unofficial OBS browser overlay which gets music lyrics from LRClib for a OBS plugin named Tuna.
-**https://github.com/univrsal/tuna**
+# 🎵 Tuna Lyrics OBS Overlay
+A beautiful, high-performance OBS browser overlay that fetches synchronized lyrics from **LRCLib**. Designed specifically for the [Tuna plugin](https://github.com/univrsal/tuna).
 
-The official overlay that is in the Tuna plugin github repository looks bad, and uses a lyrics database which is hosted by the creator of the Tuna plugin.
-The reason i decided to make this overlay is that:
-1. The original one looks bad, just a plain text.
-2. The database is not the best, so most of the songs i was stuck with no lyrics found screen.
+> **Why this exists:** The default Tuna overlay is functional but visually basic. This project provides a modern, "Apple Music" style aesthetic with glowing effects and word-by-word highlighting.
 
-This project was made for my personal use, but i decided that it would be good if i published it so people can use it.
-This overlay uses official LRClib api.
-There is also a fallback, so when GET fails it fallbacks to Search. Meaning that you will get your lyrics most of the time.
+---
 
-# How to use.
-1. Make sure you have Tuna setuped in OBS and running on port 1608.
-2. And then simply add a browser source and set the url to:
-# https://jakpat.dev/Tuna-Lyrics-OBS-Overlay/
+## ✨ Features
+* **Dual-Search Engine:** Uses a triple-fallback strategy (Duration match ➡️ Metadata match ➡️ Broad search) to find lyrics that other overlays miss.
+* **Glow & Motion:** Smooth, hardware-accelerated scrolling and glowing active states.
+* **Word-by-Word Sync:** Intelligent highlighting that tracks the song's progress within the line.
+* **Minimalist Design:** Clean transparency and CSS masking to blend perfectly into any OBS scene.
 
-Ok, thats all. Enjoy!
+## 🚀 How to Use
+
+1.  **Requirement:** Ensure [Tuna](https://github.com/univrsal/tuna) is installed and the web server is running on port **1608**.
+2.  **Add Browser Source:** In OBS, create a new Browser Source.
+3.  **URL:** Use the link for the version you prefer:
+
+### 🌟 Modern Version (Recommended)
+Features word-highlighting, smooth glow, and advanced sync.
+> **URL:** `https://jakpat.dev/Tuna-Lyrics-OBS-Overlay/`
+
+### 📜 Classic Version (V1)
+The original lightweight version with simple line-by-line scrolling.
+> **URL:** `https://jakpat.dev/Tuna-Lyrics-OBS-Overlay/v1.html`
+
+---
+
+## 🛠️ Troubleshooting
+
+### "Waiting for music..." stays on screen?
+Because this overlay is hosted on HTTPS and Tuna runs on your local computer via HTTP, browsers often block the connection for security.
+1.  Open the overlay URL in your normal browser.
+2.  Click the **Site Settings** (lock icon in the URL bar).
+3.  Find **Insecure Content** and set it to **Allow**.
+4.  Refresh the Browser Source in OBS.
+
+### Sync is slightly off?
+If the lyrics are consistently too fast or too slow, you can adjust the `OFFSET` constant in the `.html` file (Default is `1.3` seconds to account for Tuna/Player delay).
+
+---
+
+## 🤝 Credits
+* Lyrics provided by [LRCLib](https://lrclib.net/).
+* Powered by [Tuna](https://github.com/univrsal/tuna).
+
+*Made with ❤️ by jakpat.*
