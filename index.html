@@ -97,44 +97,63 @@ const OFFSET = parseFloat(urlParams.get('offset')) || 1.3;
             document.getElementById('lyrics-wrapper').style.transform = `translateY(0px)`;
             document.getElementById("lyrics").innerHTML = `<li class='status-msg'>${msg}</li>`; 
         }
+    // Search for the lyrics
+    async function getLyrics(title, artists, duration) {
+    setStatus("Searching...");
 
-        async function getLyrics(title, artists, duration) {
-            setStatus("Searching...");
-            
-            // Clean common junk out of YouTube titles
-            const cleanTitle = title.replace(/\(feat.*?\)|\[.*?\]|\(Official.*?\)|- Remastered.*|- Deluxe.*/gi, "").split('-')[0].trim();
-            const cleanArtist = artists[0].replace(/- Topic/gi, "").trim();
+    const cleanTitle = title.replace(/\(feat.*?\)|\[.*?\]|\(Official.*?\)/gi, "").split('-')[0].trim();
+    const cleanArtist = artists[0].replace(/- Topic/gi, "").trim();
+    const roundedDuration = duration ? Math.round(duration) : null;
 
-            // Strategy List:
-            // 1. Get with duration (High accuracy for synced lyrics)
-            // 2. Get with just metadata
-            // 3. Broad search (Last resort)
-            const endpoints = [
-                `${LYRCIS_HOST}/get?track_name=${encodeURIComponent(cleanTitle)}&artist_name=${encodeURIComponent(cleanArtist)}${duration ? `&duration=${Math.round(duration)}` : ''}`,
-                `${LYRCIS_HOST}/get?track_name=${encodeURIComponent(cleanTitle)}&artist_name=${encodeURIComponent(cleanArtist)}`,
-                `${LYRCIS_HOST}/search?q=${encodeURIComponent(cleanArtist + " " + cleanTitle)}`
-            ];
-
-            for (const url of endpoints) {
-                try {
-                    const response = await fetch(url);
-                    if (!response.ok) continue;
-                    
-                    const data = await response.json();
-                    const result = Array.isArray(data) ? data.find(i => i.syncedLyrics) : data;
-
-                    if (result && result.syncedLyrics) {
-                        renderLyrics(result.syncedLyrics);
-                        return; // Match found!
-                    }
-                } catch (e) {
-                    console.warn("Search attempt failed, trying next...");
+    // --- STRATEGY 1: High-Precision Get ---
+    // This is the fastest and most accurate if the duration matches perfectly.
+    if (roundedDuration) {
+        try {
+            const getUrl = `${LYRCIS_HOST}/get?track_name=${encodeURIComponent(cleanTitle)}&artist_name=${encodeURIComponent(cleanArtist)}&duration=${roundedDuration}`;
+            const response = await fetch(getUrl);
+            if (response.ok) {
+                const data = await response.json();
+                if (data.syncedLyrics) {
+                    renderLyrics(data.syncedLyrics);
+                    return; // Success! Exit early.
                 }
             }
-            
-            current_lyrics = []; 
-            setStatus("Lyrics Not Found"); 
+        } catch (e) {
+            console.warn("Precision match failed, switching to search...");
         }
+    }
+
+    // --- STRATEGY 2: Fuzzy Search Fallback ---
+    // We only get here if Strategy 1 found nothing.
+    try {
+        const searchUrl = `${LYRCIS_HOST}/search?track_name=${encodeURIComponent(cleanTitle)}&artist_name=${encodeURIComponent(cleanArtist)}`;
+        const response = await fetch(searchUrl);
+        if (!response.ok) throw new Error();
+
+        const results = await response.json();
+        const syncedResults = results.filter(r => r.syncedLyrics);
+
+        // Find a result within a 4-second window
+        let match = syncedResults.find(r => 
+            duration && Math.abs(r.duration - duration) < 4
+        );
+
+        // Strict fallback: Same name, even if duration is slightly further out
+        if (!match && syncedResults.length > 0) {
+            if (syncedResults[0].trackName.toLowerCase() === cleanTitle.toLowerCase()) {
+                match = syncedResults[0];
+            }
+        }
+
+        if (match) {
+            renderLyrics(match.syncedLyrics);
+        } else {
+            setStatus("Lyrics Not Found");
+        }
+    } catch (e) {
+        setStatus("Lyrics Not Found");
+    }
+}
 
         function renderLyrics(syncedText) {
             const lines = syncedText.split("\n");
