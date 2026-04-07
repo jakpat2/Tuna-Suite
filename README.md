@@ -39,13 +39,17 @@ This overlay is designed to feel like a premium karaoke machine, even though mos
 1. Create a new **Browser Source** in OBS.
 2. Use the URL for the version you prefer:
 
+#### 🔥 Kinetic 3D (Version 3)
+A high-energy, cinematic layout featuring 3D perspective, motion blur, and aggressive typography that "punches" through the screen.
+**URL:** `https://jakpat.dev/Tuna-Lyrics-OBS-Overlay/kinetic.html`
+
 #### 🌟 Modern Glow (Version 2 - Recommended)
 The latest version with the Hybrid Search engine and word-sync.
 **URL:** `https://jakpat.dev/Tuna-Lyrics-OBS-Overlay/`
 
 #### 📜 Classic (Version 1)
 The original lightweight version with simple line-by-line scrolling.
-**URL:** `https://jakpat.dev/Tuna-Lyrics-OBS-Overlay/v1.html`
+**URL:** `https://jakpat.dev/Tuna-Lyrics-OBS-Overlay/classic.html`
 
 ---
 
