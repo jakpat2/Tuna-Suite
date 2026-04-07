@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset='utf-8'>
+    <title>Music Visualizer | by jakpat</title>
+    <style>
+        :root {
+    --accent-color: #ffffff;
+    --bg-dark: rgba(15, 15, 15, 0.85);
+    --text-main: #ffffff;
+    --scroll-speed: 0.6s;
+    --word-speed: 0.3s; 
+    --micro-lift: -0.15em; 
+    
+    /* Change this one number to scale the whole UI up or down */
+    --base-scale: 1.1; 
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    margin: 0; padding: 0;
+    background-color: transparent; 
+    overflow: hidden;
+    color: var(--text-main);
+    height: 100vh; width: 100vw;
+    /* Scales font based on window height */
+    font-size: calc(24px * var(--base-scale)); 
+}
+
+#bg-glow {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-size: cover;
+    background-position: center;
+    filter: blur(80px) brightness(0.3);
+    opacity: 0.75;
+    z-index: -1;
+    transition: background-image 1.2s ease-in-out;
+}
+
+#lyrics-container {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: flex; justify-content: center;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+    z-index: 1;
+}
+
+#lyrics-wrapper {
+    width: 90%; 
+    transition: transform var(--scroll-speed) cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+#lyrics {
+    list-style: none;
+    padding: 0; margin: 0;
+    text-align: center;
+}
+
+li {
+    padding: 1.5em 0.5em; 
+    font-size: 2.2em; /* Scaled relative to body font */
+    line-height: 1.4;
+    transition: opacity 0.5s ease;
+    opacity: 0.15; 
+    font-weight: 700;
+    text-shadow: 0 0 12px rgba(0, 0, 0, 0.9);
+}
+
+li.active { opacity: 1 !important; }
+
+.word {
+    display: inline-block;
+    transition: transform var(--word-speed) cubic-bezier(0.4, 0, 0.2, 1), 
+                opacity var(--word-speed) ease,
+                text-shadow var(--word-speed) ease;
+    opacity: 0.4;
+    white-space: pre;
+    transform: translateY(0);
+}
+
+.active-word {
+    opacity: 1 !important;
+    color: #ffffff !important;
+    transform: translateY(var(--micro-lift)); 
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.6), 0 0 25px rgba(255, 255, 255, 0.2), 0 5px 15px rgba(0, 0, 0, 0.8); 
+}
+
+/* --- THE DYNAMIC WIDGET --- */
+.widget-container {
+    position: fixed;
+    bottom: 5vh; left: 5vh;
+    z-index: 100;
+    width: clamp(350px, 40vw, 600px); /* Responsive width with limits */
+}
+
+.widget {
+    display: flex; align-items: center;
+    background: var(--bg-dark);
+    border-radius: 1.5em;
+    padding: 1.2em;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+}
+
+#cover {
+    width: 4.5em; height: 4.5em;
+    border-radius: 0.8em;
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0;
+    transition: background-image 0.5s ease;
+}
+
+.widget-info { margin-left: 1.2em; flex-grow: 1; overflow: hidden; }
+
+#widget-title {
+    font-size: 0.9em; font-weight: 800; color: white;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+#widget-artist {
+    font-size: 0.7em; color: rgba(255,255,255,0.5);
+    margin-bottom: 0.5em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.time-info {
+    display: flex; justify-content: space-between;
+    font-size: 0.5em; font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 0.3em;
+}
+
+.progress-bar {
+    width: 100%; height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+#progress-fill {
+    height: 100%; width: 0%;
+    background: var(--accent-color);
+    box-shadow: 0 0 10px var(--accent-color);
+    transition: width 0.3s linear;
+}
+
+.status-msg { opacity: 1 !important; font-size: 1.2em !important; margin-top: 40vh; }
+    </style>
+</head>
+<body>
+    <div id="bg-glow"></div>
+
+    <div id="lyrics-container">
+        <div id="lyrics-wrapper"><ul id="lyrics"><li class="status-msg">Waiting for music...</li></ul></div>
+    </div>
+
+    <div class="widget-container">
+        <div class="widget">
+            <div id="cover"></div>
+            <div class="widget-info">
+                <div id="widget-title">No Song</div>
+                <div id="widget-artist">Waiting...</div>
+                <div class="time-info">
+                    <span id="time-current">0:00</span>
+                    <span id="time-total">0:00</span>
+                </div>
+                <div class="progress-bar"><div id="progress-fill"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const FETCH_URL = 'http://localhost:1608/';
+        const LYRCIS_HOST = "https://lrclib.net/api"; 
+        const urlParams = new URLSearchParams(window.location.search);
+        const OFFSET = parseFloat(urlParams.get('offset')) || 1.3;
+
+        let current_lyrics = [];
+        let current_line_index = -1;
+        let current_song_pos = 0;
+        let current_duration = 0;
+        let current_title = "";
+        let current_artist = "";
+        let current_status = "";
+        let last_tick_time = Date.now();
+        let playback_rate = 1.0;
+
+        function formatTime(s) {
+            if (isNaN(s) || s < 0) return "0:00";
+            const mins = Math.floor(s / 60);
+            const secs = Math.floor(s % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // --- IMPROVED COLOR EXTRACTION ---
+        function updateThemeColor(imgUrl) {
+            const img = new Image();
+            img.crossOrigin = "Anonymous";
+            // Use a separate timestamp for color extraction to bypass cache
+            img.src = imgUrl + "?v=" + Date.now(); 
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = 10; canvas.height = 10;
+                ctx.drawImage(img, 0, 0, 10, 10);
+                const data = ctx.getImageData(0, 0, 10, 10).data;
+                let r=0, g=0, b=0;
+                for(let i=0; i<data.length; i+=4) { r += data[i]; g += data[i+1]; b += data[i+2]; }
+                r = Math.floor(r/25); g = Math.floor(g/25); b = Math.floor(b/25);
+                
+                const brightness = (r*299 + g*587 + b*114) / 1000;
+                if (brightness < 100) { r+=60; g+=60; b+=60; }
+                if (brightness > 220) { r-=50; g-=50; b-=50; }
+
+                document.documentElement.style.setProperty('--accent-color', `rgb(${r},${g},${b})`);
+            };
+        }
+
+        // --- NEW: FORCED PRELOADER ---
+        function forceUpdateCover(url, attempts = 0) {
+            if (attempts > 10) return; // Stop after 5 seconds of failure
+
+            const img = new Image();
+            // We append a timestamp to ensure the browser doesn't give us a cached error icon
+            const timestampedUrl = url + (url.includes('?') ? '&' : '?') + "t=" + Date.now();
+            
+            img.onload = () => {
+                // Once we KNOW the image is ready, set it
+                const cssUrl = `url("${timestampedUrl}")`;
+                document.getElementById('cover').style.backgroundImage = cssUrl;
+                document.getElementById('bg-glow').style.backgroundImage = cssUrl;
+                updateThemeColor(url);
+            };
+
+            img.onerror = () => {
+                // If Tuna hasn't finished writing the file, wait 500ms and try again
+                setTimeout(() => forceUpdateCover(url, attempts + 1), 500);
+            };
+
+            img.src = timestampedUrl;
+        }
+
+        async function getLyrics(title, artists, duration) {
+            const cleanTitle = title.replace(/\(feat.*?\)|\[.*?\]|\(Official.*?\)/gi, "").split('-')[0].trim();
+            const cleanArtist = artists[0].replace(/- Topic/gi, "").trim();
+            try {
+                const response = await fetch(`${LYRCIS_HOST}/get?track_name=${encodeURIComponent(cleanTitle)}&artist_name=${encodeURIComponent(cleanArtist)}&duration=${Math.round(duration)}`);
+                const data = await response.json();
+                if (data.syncedLyrics) renderLyrics(data.syncedLyrics);
+                else setStatus("Lyrics Not Found");
+            } catch (e) { setStatus("Lyrics Not Found"); }
+        }
+
+        function renderLyrics(syncedText) {
+            const lines = syncedText.split("\n");
+            current_lyrics = [];
+            const timeRegex = /\[(\d+):(\d+)(?:[.:](\d+))?\]/;
+            for (let line of lines) {
+                const match = line.match(timeRegex);
+                if (match) {
+                    const totalSeconds = parseInt(match[1]) * 60 + parseInt(match[2]) + (parseInt((match[3] || "0").padEnd(3, '0').substring(0, 3)) / 1000);
+                    const content = line.replace(/\[.*?\]/, "").trim();
+                    if (!content) continue; 
+                    current_lyrics.push({ time: totalSeconds, words: content.split(/\s+/).map(w => ({ text: w })) });
+                }
+            }
+            current_lyrics.sort((a, b) => a.time - b.time);
+            const lyricsEl = document.getElementById("lyrics");
+            lyricsEl.innerHTML = "";
+            current_lyrics.forEach((line, i) => {
+                const li = document.createElement('li');
+                li.id = `line-${i}`;
+                line.words.forEach(w => {
+                    const span = document.createElement('span'); span.className = 'word'; span.textContent = w.text + " ";
+                    const wrapper = document.createElement('span'); wrapper.className = 'word-wrapper';
+                    wrapper.appendChild(span); li.appendChild(wrapper);
+                });
+                lyricsEl.appendChild(li);
+            });
+        }
+
+        function setStatus(msg) { 
+            document.getElementById('lyrics-wrapper').style.transform = `translateY(0px)`;
+            document.getElementById("lyrics").innerHTML = `<li class='status-msg'>${msg}</li>`; 
+        }
+
+        function fetch_data() {
+            fetch(FETCH_URL).then(r => r.json()).then(data => {
+                if (!data || data.status === "stopped") return;
+                
+                current_status = data.status;
+                current_duration = data.duration / 1000;
+                let server_pos = (data.progress / 1000) + OFFSET;
+                
+                let server_artists = (data.artists || ["Unknown"]).join(", ");
+                let server_key = data.title + "|" + server_artists;
+                let current_key = current_title + "|" + current_artist;
+
+                if (server_key !== current_key) {
+                    current_title = data.title;
+                    current_artist = server_artists;
+
+                    document.getElementById('widget-title').textContent = data.title;
+                    document.getElementById('widget-artist').textContent = current_artist;
+                    document.getElementById('time-total').textContent = formatTime(current_duration);
+                    
+                    current_line_index = -1;
+                    current_lyrics = [];
+                    current_song_pos = server_pos; 
+
+                    // --- START THE FORCED UPDATE ---
+                    forceUpdateCover(data.cover_url);
+
+                    getLyrics(current_title, data.artists || ["Unknown"], current_duration);
+                }
+
+                document.getElementById('progress-fill').style.width = (data.progress/data.duration*100) + "%";
+                const drift = server_pos - current_song_pos;
+                playback_rate = Math.abs(drift) > 1.2 ? 1.0 : 1.0 + (drift * 0.2);
+                if (Math.abs(drift) > 2.5) current_song_pos = server_pos; 
+            }).catch(() => {});
+        }
+
+        setInterval(fetch_data, 1000);
+
+        function update_loop() {
+            const now = Date.now();
+            const dt = (now - last_tick_time) / 1000;
+            last_tick_time = now;
+
+            if (current_status === "playing") {
+                current_song_pos += (dt * playback_rate);
+                document.getElementById('time-current').textContent = formatTime(current_song_pos - OFFSET);
+
+                if (current_lyrics.length > 0) {
+                    let targetIndex = -1;
+                    for (let i = 0; i < current_lyrics.length; i++) {
+                        if (current_song_pos >= current_lyrics[i].time) targetIndex = i;
+                        else break;
+                    }
+
+                    if (targetIndex !== -1 && targetIndex !== current_line_index) {
+                        const line = document.getElementById("line-" + targetIndex);
+                        const prev = document.getElementById("line-" + current_line_index);
+                        if (prev) {
+                            prev.classList.remove("active");
+                            prev.querySelectorAll('.word').forEach(w => w.classList.remove('active-word'));
+                        }
+                        if (line) {
+                            line.classList.add("active");
+                            const offset = (window.innerHeight / 2) - (line.offsetTop + line.offsetHeight / 2);
+                            document.getElementById('lyrics-wrapper').style.transform = `translateY(${offset}px)`;
+                        }
+                        current_line_index = targetIndex;
+                    }
+
+                    if (targetIndex !== -1) {
+                        const lineData = current_lyrics[targetIndex];
+                        const nextLine = current_lyrics[targetIndex + 1];
+                        const lineStart = lineData.time;
+                        const lineEnd = nextLine ? nextLine.time : lineStart + 4;
+                        const timeInLine = current_song_pos - lineStart;
+                        const activeDur = Math.min(lineEnd - lineStart, (lineData.words.length * 0.6) + 1.2);
+
+                        let activeWordIdx = -1;
+                        if (timeInLine <= activeDur) {
+                            let totalWeight = 0;
+                            const weights = lineData.words.map(w => {
+                                let weight = Math.max(2, w.text.length); 
+                                if (w.text.match(/[.,!?]$/)) weight += 4; 
+                                totalWeight += weight;
+                                return weight;
+                            });
+                            let cumulativeTime = 0;
+                            for (let j = 0; j < lineData.words.length; j++) {
+                                const wordDur = (weights[j] / totalWeight) * activeDur;
+                                if (timeInLine >= cumulativeTime && timeInLine < cumulativeTime + wordDur) { activeWordIdx = j; break; }
+                                cumulativeTime += wordDur;
+                            }
+                        }
+                        document.querySelectorAll(`#line-${targetIndex} .word`).forEach((w, i) => {
+                            w.classList.toggle('active-word', i === activeWordIdx);
+                        });
+                    }
+                }
+            }
+            requestAnimationFrame(update_loop);
+        }
+        requestAnimationFrame(update_loop);
+    </script>
+</body>
+</html>
