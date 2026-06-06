@@ -41,19 +41,19 @@ This overlay is designed to feel like a premium karaoke machine, even though mos
 
 #### 💎 The Studio Edition (Full Setup)
 The complete package. This version includes a floating glassmorphism card with Album Art, Song Title, Artist, and a Progress Bar alongside the Modern Glow lyrics.
-**URL:** `https://jakpat.dev/Tuna-Lyrics-OBS-Overlay/studio.html`
+**URL:** `https://lyrics.jakpat.dev/studio.html`
 
 #### 🌟 Modern Glow (Recommended)
 The latest version with the Hybrid Search engine and word-sync. (This is the main version)
-**URL:** `https://jakpat.dev/Tuna-Lyrics-OBS-Overlay/modern-glow.html`
+**URL:** `https://lyrics.jakpat.dev/modern-glow.html`
 
 #### 🔥 Kinetic 3D
 A high-energy, cinematic layout featuring 3D perspective, motion blur, and aggressive typography that "punches" through the screen.
-**URL:** `https://jakpat.dev/Tuna-Lyrics-OBS-Overlay/kinetic.html`
+**URL:** `https://lyrics.jakpat.dev/kinetic.html`
 
 #### 📜 Classic
 An archive of the original, lightweight version with simple line-by-line scrolling. *(Note: Does not include Hybrid Search or Word-Sync).*
-**URL:** `https://jakpat.dev/Tuna-Lyrics-OBS-Overlay/classic.html`
+**URL:** `https://lyrics.jakpat.dev/classic.html`
 
 ---
 
