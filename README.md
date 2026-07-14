@@ -1,31 +1,39 @@
-# 🎵 Tuna Lyrics OBS Overlay
-A high-performance, visually stunning OBS browser overlay for synchronized lyrics. Built specifically for the [Tuna OBS Plugin](https://github.com/univrsal/tuna).
-
-> **The Upgrade:** This project solves the common "Lyrics Not Found" issue. By using a **Hybrid Search Strategy** (High-Precision + Fuzzy Fallback) via the official [LRCLib API](https://lrclib.net/), this overlay finds synchronized lyrics that other tools miss.
+# 🎵 Tuna-Suite
+A premium collection of high-performance OBS browser overlays and visualizers. Built specifically for the [Tuna OBS Plugin](https://github.com/univrsal/tuna).
 
 ---
 
-## 🚀 Why use this?
-1. **Hybrid Search Logic:** Most overlays fail if the song duration is off by even one second. This version tries a perfect match first, then automatically switches to a "Fuzzy" search with a 4-second safety window.
-2. **Strict Accuracy:** Unlike "grab-anything" scripts, this verifies track names before displaying lyrics, ensuring you don't see a remix's lyrics over an original song.
-3. **Premium Visuals:** "Apple Music" style aesthetic with glowing effects, hardware-accelerated motion, and dynamic edge-fading.
+## 🎨 The Collection
 
-## ✨ Features
-* **Intelligent Word-Sync:** Real-time tracking *within* the line for a premium karaoke feel.
-* **Low CPU Impact:** Optimized CSS blurs and transforms to keep OBS usage minimal.
-* **Auto-Correction:** Built-in "Drift Correction" to stay perfectly in sync even if your stream lag fluctuates.
-* **Customizable Offset:** Fine-tune timing via the OBS URL without touching a single line of code.
+### 🖼️ Visualizers (Studio Architecture)
+These tools utilize our premium glassmorphism card engine for a clean, cohesive display.
+
+* **Vision:** The complete cinematic package. This version features the signature floating glassmorphism card with Album Art, Song Title, Artist, and a Progress Bar, set against an ambient, dynamically extended background.
+    * **URL:** `https://tuna.jakpat.dev/visualizer/vision.html`
+* **Studio Edition:** The full lyric-integrated experience. Features the same floating glassmorphism card with Album Art, Song Title, Artist, and a Progress Bar, paired with the Modern Glow lyric engine.
+    * **URL:** `https://tuna.jakpat.dev/visualizer/studio.html`
+
+### 🎤 Lyric Overlays
+High-performance, synchronized lyric engines featuring our **Hybrid Search Strategy** (High-Precision + Fuzzy Fallback) via the [LRCLib API](https://lrclib.net/).
+
+* **Modern Glow (Recommended):** The latest version featuring the Hybrid Search engine and intelligent word-sync.
+    * **URL:** `https://tuna.jakpat.dev/lyrics/modern-glow.html`
+* **Kinetic 3D:** High-energy, cinematic layout with 3D perspective and aggressive typography.
+    * **URL:** `https://tuna.jakpat.dev/lyrics/kinetic.html`
+* **Classic:** Lightweight, line-by-line scrolling. *(No Hybrid Search/Word-Sync).*
+    * **URL:** `https://tuna.jakpat.dev/lyrics/classic.html`
 
 ---
 
-## ⚙️ How it Works (The "Magic" of Word-Sync)
-This overlay is designed to feel like a premium karaoke machine, even though most lyrics in the **LRCLib** database only provide timestamps for the *start* of each line.
+## ✨ Core Technology
+### The "Magic" of Word-Sync
+Our lyric engine feels like a premium karaoke machine, even though most LRCLib data only provides timestamps for the start of each line.
 
-* **The Problem:** The overlay only knows when a line starts (e.g., `[00:12.50]`) and the current time from Tuna. It has no native data on when individual words are spoken.
-* **The Solution:** Our custom **Predictive Weighting Algorithm** calculates the most likely timing for every word in real-time.
+* **Hybrid Search Logic:** Most overlays fail if the song duration is off by even one second. This version tries a perfect match first, then automatically switches to a "Fuzzy" search with a 4-second safety window.
+* **Predictive Weighting Algorithm:** Since the overlay only knows when a line starts, it calculates word timing in real-time:
     * **Character Weighting:** Longer words are assigned more "time" than shorter ones.
-    * **Punctuation Awareness:** The engine detects commas and periods, adding subtle pauses to mimic natural human speech.
-    * **Density Scaling:** It automatically speeds up or slows down based on the "syllables-per-second" of the line to ensure the highlight reaches the end of the sentence exactly when the next line begins.
+    * **Punctuation Awareness:** Detects commas and periods, adding subtle pauses to mimic natural speech.
+    * **Density Scaling:** Automatically adjusts based on the "syllables-per-second" to ensure the highlight ends exactly when the next line begins.
 
 ---
 
@@ -37,38 +45,18 @@ This overlay is designed to feel like a premium karaoke machine, even though mos
 
 ### 2. Setup OBS
 1. Create a new **Browser Source** in OBS.
-2. Use the URL for the version you prefer:
+2. Use the URL for the specific tool or edition you prefer.
 
-#### 💎 The Studio Edition (Full Setup)
-The complete package. This version includes a floating glassmorphism card with Album Art, Song Title, Artist, and a Progress Bar alongside the Modern Glow lyrics.
-**URL:** `https://lyrics.jakpat.dev/studio.html`
-
-#### 🌟 Modern Glow (Recommended)
-The latest version with the Hybrid Search engine and word-sync. (This is the main version)
-**URL:** `https://lyrics.jakpat.dev/modern-glow.html`
-
-#### 🔥 Kinetic 3D
-A high-energy, cinematic layout featuring 3D perspective, motion blur, and aggressive typography that "punches" through the screen.
-**URL:** `https://lyrics.jakpat.dev/kinetic.html`
-
-#### 📜 Classic
-An archive of the original, lightweight version with simple line-by-line scrolling. *(Note: Does not include Hybrid Search or Word-Sync).*
-**URL:** `https://lyrics.jakpat.dev/classic.html`
-
----
-
-## 🕒 Adjusting Sync (Offset)
-If the lyrics are consistently too fast or too slow, add `?offset=VALUE` to the end of your URL in the Browser Source:
-* **To delay lyrics (move them later):** `.../?offset=2.5`
-* **To speed them up (move them earlier):** `.../?offset=0.5`
+### 🕒 Adjusting Sync (Offset)
+If lyrics are consistently off, add `?offset=VALUE` to the end of your URL:
+* **To delay:** `.../?offset=2.5`
+* **To speed up:** `.../?offset=0.5`
 *(Default is 1.3)*
 
 ---
 
 ## 🛠️ Troubleshooting
-
 **"Waiting for music..." stays on screen?**
-If you are playing music but the overlay isn't updating:
 1. Open the overlay URL in your standard web browser.
 2. If prompted to **"Allow access to applications on your device,"** click **Allow**.
 3. If no prompt appears, click the **Lock/Tune icon** in the address bar and ensure **Local Network access** or **Insecure Content** is allowed.
