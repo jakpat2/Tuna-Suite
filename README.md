@@ -9,9 +9,9 @@ A premium collection of high-performance OBS browser overlays and visualizers. B
 These tools utilize our premium glassmorphism card engine for a clean, cohesive display.
 
 * **Vision:** The complete cinematic package. This version features the signature floating glassmorphism card with Album Art, Song Title, Artist, and a Progress Bar, set against an ambient, dynamically extended background.
-    * **URL:** `https://tuna.jakpat.dev/visualizer/vision.html`
+    * **URL:** `https://tuna.jakpat.dev/visualizers/vision.html`
 * **Studio Edition:** The full lyric-integrated experience. Features the same floating glassmorphism card with Album Art, Song Title, Artist, and a Progress Bar, paired with the Modern Glow lyric engine.
-    * **URL:** `https://tuna.jakpat.dev/visualizer/studio.html`
+    * **URL:** `https://tuna.jakpat.dev/visualizers/studio.html`
 
 ### 🎤 Lyric Overlays
 High-performance, synchronized lyric engines featuring our **Hybrid Search Strategy** (High-Precision + Fuzzy Fallback) via the [LRCLib API](https://lrclib.net/).
