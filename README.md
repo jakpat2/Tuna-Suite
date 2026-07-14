@@ -5,6 +5,12 @@ A premium collection of high-performance OBS browser overlays and visualizers. B
 
 ## 🎨 The Collection
 
+## ⚡ Widgets
+Compact, lightweight, and customizable overlays for your stream.
+
+* **Compact:** A minimalist music status widget featuring dynamic color extraction based on the album art.
+    * **URL:** `https://tuna.jakpat.dev/widgets/compact.html`
+
 ### 🖼️ Visualizers (Studio Architecture)
 These tools utilize our premium glassmorphism card engine for a clean, cohesive display.
 
