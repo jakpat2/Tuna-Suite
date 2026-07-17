@@ -1,4 +1,5 @@
 > # **⚠️ NOTICE:** Tuna Suite is currently transitioning and merging into **Pulse**. Please pardon our dust while we update our branding and documentation.
+> # Pulse Desktop comming soon. Currently only the OBS Tuna plugin support is pressent.
 > The new home for all overlays and tools is: [pulse.jakpat.dev](https://pulse.jakpat.dev)
 
 # 🎵 Pulse
