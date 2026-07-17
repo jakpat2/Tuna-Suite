@@ -89,5 +89,6 @@ Our lyric engine mimics a premium karaoke machine, providing precise timing even
 * **Lyrics API:** [LRCLib](https://lrclib.net/)
 * **OBS Integration:** [Tuna OBS Plugin](https://github.com/univrsal/tuna)
 * **Apple Music API:** For getting music/album covers that got cut of by the Windows 1MB thumbnail limit.
+* **Deezer API:** Used as a fallback for when Apple Music API doesnt return a cover art.
 
 *Developed with ❤️ by jakpat.*
