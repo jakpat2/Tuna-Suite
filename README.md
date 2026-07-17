@@ -25,27 +25,27 @@ Compact, lightweight, and customizable overlays for your stream or desktop.
 
 *   **Compact:** A minimalist music status widget featuring dynamic color extraction based on the album art.
     *   **Pulse Desktop:** Use the "Open in App" feature.
-    *   **OBS Source:** `https://pulse.jakpat.dev/widgets/compact.html`
+    *   **OBS Source:** `https://pulse.jakpat.dev/overlays/widgets/compact.html`
 
 ### 🖼️ Visualizers
 These tools utilize our premium glassmorphism card engine for a clean, cohesive display.
 
 *   **Vision:** The complete cinematic package. Features a floating glassmorphism card with Album Art, Song Title, Artist, and a Progress Bar, set against a dynamic ambient background.
-    *   **OBS Source:** `https://pulse.jakpat.dev/visualizers/vision.html`
+    *   **OBS Source:** `https://pulse.jakpat.dev/overlays/visualizers/vision.html`
 *   **Studio Edition:** The full lyric-integrated experience. Features the floating glassmorphism card paired with the Modern Glow lyric engine.
-    *   **OBS Source:** `https://pulse.jakpat.dev/visualizers/studio.html`
+    *   **OBS Source:** `https://pulse.jakpat.dev/overlays/visualizers/studio.html`
 *   **Studio Minus Edition:** Studio Edition without lyrics, allowing for custom layering in OBS.
-    *   **OBS Source:** `https://pulse.jakpat.dev/visualizers/studio-minus.html`
+    *   **OBS Source:** `https://pulse.jakpat.dev/overlays/visualizers/studio-minus.html`
 
 ### 🎤 Lyric Overlays
 High-performance, synchronized lyric engines featuring our **Hybrid Search Strategy** (High-Precision + Fuzzy Fallback) via the [LRCLib API](https://lrclib.net/).
 
 *   **Modern Glow (Recommended):** The latest version featuring Hybrid Search and intelligent word-sync.
-    *   **OBS Source:** `https://pulse.jakpat.dev/lyrics/modern-glow.html`
+    *   **OBS Source:** `https://pulse.jakpat.dev/overlays/lyrics/modern-glow.html`
 *   **Kinetic 3D:** High-energy, cinematic layout with 3D perspective and aggressive typography.
-    *   **OBS Source:** `https://pulse.jakpat.dev/lyrics/kinetic.html`
+    *   **OBS Source:** `https://pulse.jakpat.dev/overlays/lyrics/kinetic.html`
 *   **Classic:** Lightweight, line-by-line scrolling.
-    *   **OBS Source:** `https://pulse.jakpat.dev/lyrics/classic.html`
+    *   **OBS Source:** `https://pulse.jakpat.dev/overlays/lyrics/classic.html`
 
 ---
 
