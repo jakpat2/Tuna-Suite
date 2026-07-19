@@ -60,9 +60,10 @@ Our lyric engine mimics a premium karaoke machine, providing precise timing even
 ## 🛠️ How to Use
 
 ### Option A: Using Pulse Desktop
-1. **Download & Install** the latest release of the Pulse Desktop application.
-2. Launch Pulse; the internal server will start automatically.
-3. Use the **Pulse Hub** within the app to select your preferred overlays and open them directly.
+1. Download the latest release of the Pulse Desktop application from the [Releases page](https://github.com/jakpat2/Pulse/releases).
+2. **Important:** Move the downloaded `.exe` to a folder where you have full write permissions (e.g., your **Documents** or **Desktop** folder). Avoid placing it in system-protected folders like `Program Files`.
+3. Launch the application. Upon the first launch, Pulse will automatically create a folder named `Pulse` in the same directory as the executable.
+4. Once launched, the internal server will start automatically. Use the **Pulse Hub** within the app to select your preferred overlays.
 
 ### Option B: Using the Tuna OBS Plugin
 1. Install the [Tuna OBS Plugin](https://github.com/univrsal/tuna) and ensure it is running on port `1608`.
@@ -74,10 +75,14 @@ Our lyric engine mimics a premium karaoke machine, providing precise timing even
 
 ---
 
+## 📂 Portable Data Storage
+Pulse is designed to be a portable application. All configuration files (`config.json`) and diagnostic logs are stored within the `Pulse` folder located in the same directory as your application executable. This ensures your settings are preserved even if you move the app.
+
+---
+
 ## ⚠️ Troubleshooting
-**"Waiting for music..." stays on screen?**
-*   **If using Pulse:** Ensure the Pulse Desktop app is running.
-*   **If using OBS:** Make sure Tuna is running on port `1608`, make sure you have selected the right music source in Tuna. If Tuna is running on the port and you have selected the right music source try opening the overlay URL in your standard web browser. If prompted to "Allow access to applications on your device," click **Allow**. Click the Lock/Tune icon in the browser address bar to ensure Local Network access is permitted. Refresh the Browser Source in OBS.
+*   **If using Pulse:** Check the logs in the `Pulse/logs` folder to verify the app is running correctly. Note that Pulse uses port `1608` to communicate.
+*   **If using OBS:** Make sure Tuna is running on port `1608`, make sure you have selected the right music source in Tuna.
 
 ---
 
